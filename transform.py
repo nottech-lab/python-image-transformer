@@ -1,17 +1,33 @@
-#https://techtutorialsx.com/2019/04/21/python-opencv-flipping-an-image/
 import cv2
-originalImage = cv2.imread('images/source/image1.jpeg')
-  
-flipVertical = cv2.flip(originalImage, 0)
-flipHorizontal = cv2.flip(originalImage, 1)
-flipBoth = cv2.flip(originalImage, -1)
 
-cv2.imwrite('images/transformed/image1.jpeg', flipVertical) 
+def flip(originalImage, axes=[]):
+    if len(axes) == 0:
+        return None
+    if len(axes) == 1:
+        return flipOnce(originalImage,axes[0])
+    else:
+        return flip(flipOnce(originalImage,axes[0]), axes[1:])
 
-#cv2.imshow('Original image', originalImage)
-#cv2.imshow('Flipped vertical image', flipVertical)
-#cv2.imshow('Flipped horizontal image', flipHorizontal)
-#cv2.imshow('Flipped both image', flipBoth)
- 
-#cv2.waitKey(0)
-#cv2.destroyAllWindows()
+def flipOnce(originalImage, axis='vertical'):
+    if axis == 'vertical':
+        return flipVertical(originalImage)
+    if axis == 'horizontal':
+        return flipHorizontal(originalImage)
+
+def flipHorizontal(originalImage):
+	return cv2.flip(originalImage, 1);
+
+def flipVertical(originalImage):
+	return cv2.flip(originalImage, 0);
+
+import os
+from os.path import isfile
+
+#Example
+#Load image from image/source/image1.jpg
+originalImage = cv2.imread('images/source/image1.jpg')
+
+#Flip the image, first vertical, then vertical and lastly horizontal
+flipped = flip(originalImage, ['vertical', 'vertical', 'horizontal'])
+
+cv2.imwrite('images/transformed/image1.jpg', flipped)
